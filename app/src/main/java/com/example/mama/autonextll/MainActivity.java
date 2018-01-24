@@ -17,8 +17,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initData();
         ll_parent = (LinearLayout) findViewById(R.id.ll_parent);
-        AotuLL autoll = new AotuLL(this);
+        final AotuLL autoll = new AotuLL(this);
         autoll.initAutoLL(ll_parent,datas);
+
+        //item点击监听
+        autoll.setOnItemClickListener(new AotuLL.OnItemClickListener() {
+            @Override
+            public void OnItemClickListener(String text) {
+                for(int i=0;i<datas.size();i++){
+                    if(datas.get(i).toString().equals(text)){
+                        datas.remove(i);
+                        //清空以前的布局
+                        ll_parent.removeAllViews();
+                        //重新生成布局
+                        autoll.initAutoLL(ll_parent,datas);
+                    }
+                }
+            }
+        });
     }
     //    数据
     ArrayList<String> datas = new ArrayList<>();

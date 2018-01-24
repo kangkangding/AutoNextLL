@@ -1,9 +1,9 @@
 package com.example.mama.autonextll;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,6 +20,15 @@ public class AotuLL {
 
     public AotuLL(Context contexts) {
         context =contexts;
+    }
+
+    private OnItemClickListener onItemClickListener;
+    public interface OnItemClickListener{
+        void OnItemClickListener(String text);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        onItemClickListener = listener;
     }
     //    绘制自动换行的线性布局
     public  void initAutoLL(LinearLayout ll_parent, List<String> datas) {
@@ -49,7 +58,7 @@ public class AotuLL {
                 isNewLayout = false;
             }
 //            计算是否需要换行
-            TextView textView = (TextView) LayoutInflater.from(context).inflate(R.layout.view, null);
+            final TextView textView = (TextView) LayoutInflater.from(context).inflate(R.layout.view, null);
             textView.setText(datas.get(i));
             textView.measure(0, 0);
 //            若是一整行都放不下这个文本框，添加旧的那行，新起一行添加这个文本框
@@ -78,6 +87,13 @@ public class AotuLL {
                     textView.setLayoutParams(textViewLP);
                     rowLL.addView(textView);
                 }
+                //点击监听
+                textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onItemClickListener.OnItemClickListener(textView.getText()+"");
+                    }
+                });
             }
         }
 //        添加最后一行，但要防止重复添加
